@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
+<title>Card Flip</title>
+
+<style type="text/css">
+  
+  @font-face {
+  	font-family: 'Rhode';
+  	src: url('assets/fonts/Rhode-MediumExtended.eot');
+  	src: url('assets/fonts/Rhode-MediumExtended.eot?#iefix') format('embedded-opentype'),
+  		url('assets/fonts/Rhode-MediumExtended.woff') format('woff'),
+  		url('assets/fonts/Rhode-MediumExtended.ttf') format('truetype');
+  	font-weight: normal;
+  	font-style: normal;
+  }
+  
+  @font-face {
+  	font-family: 'Speedy Marker';
+  	src: url('assets/fonts/SpeedyMarker.eot');
+  	src: url('assets/fonts/SpeedyMarker.eot?#iefix') format('embedded-opentype'),
+  		url('assets/fonts/SpeedyMarker.woff') format('woff'),
+  		url('assets/fonts/SpeedyMarker.ttf') format('truetype');
+  	font-weight: normal;
+  	font-style: normal;
+  }
+
+  @font-face {
+  	font-family: 'Septima';
+  	src: url('assets/fonts/Septima.eot');
+  	src: url('assets/fonts/Septima.eot?#iefix') format('embedded-opentype'),
+  		url('assets/fonts/Septima.woff') format('woff'),
+  		url('assets/fonts/Septima.ttf') format('truetype');
+  	font-weight: normal;
+  	font-style: normal;
+  }
+  
+  
+  
+  body {
+    margin:30px 40px;
+  }
+
+
+  .container {
+      width: 200px;
+      height: 260px;
+      position: absolute;
+      z-index:2;
+      -webkit-perspective: 800px;
+      -moz-perspective: 800px;
+      -o-perspective: 800px;
+      perspective: 800px;
+  }
+  
+  @media all and (max-device-width: 900px) {
+    body {
+      min-height:220vh;
+    }
+    
+    .container {
+      -webkit-perspective: 20000px;
+      -moz-perspective: 20000px;
+      -o-perspective: 20000px;
+      perspective:20000px;
+    }
+    
+    
+  }
+  
+  .card {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      -webkit-transition: -webkit-transform 1s;
+      -moz-transition: -moz-transform 1s;
+      -o-transition: -o-transform 1s;
+      transition: transform 1s;
+      -webkit-transform-style: preserve-3d;
+      -moz-transform-style: preserve-3d;
+      -o-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-transform-origin: 50% 50%;
+  }
+  .card div {
+      display: block;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      -o-backface-visibility: hidden;
+      backface-visibility: hidden;
+  }
+  
+  .card .menu-section {
+    margin:0 2em;
+    width:auto;
+    height:auto;
+    position:relative;
+    margin-bottom:2em;
+  }
+  
+  .card .front {
+    background: #06cd73;
+  }
+  .card .back {
+      background: #06cd73;
+      -webkit-transform: rotateY( 180deg );
+      -moz-transform: rotateY( 180deg );
+      -o-transform: rotateY( 180deg );
+      transform: rotateY( 180deg );
+  }
+  .card.flipped {
+      -webkit-transform: rotateY( 180deg );
+      -moz-transform: rotateY( 180deg );
+      -o-transform: rotateY( 180deg );
+      transform: rotateY( 180deg );
+  }
+  
+  .front, .back, .background-blend, body {
+    -webkit-transition: background-color 4s; /* Safari */
+    transition: background-color 4s;
+  }
+  
+  .information {
+    position:absolute;
+    text-align:center;
+    width:50%;
+    display:table;
+    color:white;
+  }
+  
+  .information a {
+    color:white;
+  }
+  
+  .information-left {
+    left:0;
+  }
+  
+  .information-right {
+    right:60px;
+  }
+  
+  
+  
+  @media all and (max-device-width: 900px) {
+    
+    .container {
+      width:80%;
+      height:100%;
+      top:70%;
+      margin-bottom:70vh;
+      
+    }
+    
+    .information-left {
+      width:100%;
+      position:fixed;
+      height:100%;
+    }
+    
+    .information-right{ display: none; }
+  }
+  
+  .information .inner {
+    display:table-cell;
+    vertical-align:middle;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight:normal;
+  }
+  
+  h1, h2, p, a {
+
+    line-height:1.3;
+  }
+  
+  h1, h2, h3, h4, h5, h6, p {
+    margin:0;
+  }
+  
+  a {
+    color:#000;
+    text-decoration:none;
+  }
+  
+  p {
+    font-size:1.7vh;
+    margin-bottom:1em;
+    font-family: 'Septima', Helvetica, Arial, sans-serif;
+  }
+  
+  h1 {
+    font-size:1.6vh;
+    text-transform:uppercase;
+    
+  }
+  
+  h2 {
+    text-transform:uppercase;
+    font-size:1.35vh;
+    font-family:'Rhode', Helvetica, Arial, sans-serif;
+    margin-bottom:.5em;
+  }
+  
+  h2 span {
+    font-family: 'Speedy Marker', Helvetica, Arial, sans-serif;
+    font-size:1.2em;
+  }
+  
+  h3 {
+    font-size:1.7vh;
+    text-transform:uppercase;
+    font-family: 'Septima', Helvetica, Arial, sans-serif;
+    margin-bottom:.1em;
+  }
+
+  
+  .logo {
+    text-align:center;
+    padding:1.5em 0;
+  }
+  
+  .logo img {
+    height:3.2vh;
+  }
+  
+
+  
+  .inner div {
+    margin-bottom:2em;
+  }
+  
+  .card .menu-image {
+    position:absolute;
+    top:auto;
+    bottom:6vh;
+    height:18.5vh;
+    text-align:center;
+  }
+  
+  .card .menu-image img {
+    height:100%;
+  }
+  
+  .front-image {
+    margin-left:-4em;
+  }
+  
+  .back-image {
+    margin-top:1.5em;
+  }
+  
+  .back .logo {
+    visibility:hidden;
+  }
+  
+  /* YOUTUBE */
+  .background-blend {
+    mix-blend-mode: difference;
+    background: rgb(111, 252, 217);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+  }
+  
+  .video-background {
+    background: #000;
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -99;
+    height:100vh;
+  }
+  
+  .video-foreground {
+    -webkit-filter: blur(15px);
+      -moz-filter: blur(15px);
+      -o-filter: blur(15px);
+      -ms-filter: blur(15px);
+      filter: blur(15px);
+  }
+  
+  .video-foreground,
+  .video-background iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  #vidtop-content {
+  	top: 0;
+  	color: #fff;
+  }
+  .vid-info { position: absolute; top: 0; right: 0; width: 33%; background: rgba(0,0,0,0.3); color: #fff; padding: 1rem; font-family: Avenir, Helvetica, sans-serif; }
+  .vid-info h1 { font-size: 2rem; font-weight: 700; margin-top: 0; line-height: 1.2; }
+  .vid-info a { display: block; color: #fff; text-decoration: none; background: rgba(0,0,0,0.5); transition: .6s background; border-bottom: none; margin: 1rem auto; text-align: center; }
+  @media (min-aspect-ratio: 16/9) {
+    .video-foreground { height: 300%; top: -100%; }
+  }
+  @media (max-aspect-ratio: 16/9) {
+    .video-foreground { width: 300%; left: -100%; }
+  }
+  @media all and (max-width: 600px) {
+  .vid-info { width: 50%; padding: .5rem; }
+  .vid-info h1 { margin-bottom: .2rem; }
+  }
+  @media all and (max-width: 500px) {
+  .vid-info .acronym { display: none; }
+  }
+  
+</style>
+
+
+
+</head>
+<body>
+  
+  
+  <section class="container">
+    <div class="card">
+      <div class="front">
+        <h1 class="logo"><img src="assets/images/mr.svg" alt="mood ring" /></h1>
+        <div class="menu-section">
+          <h2>Astrology Special <span class="price">$12</span></h2>
+          <p class="mt">Please see display for details</p>
+        </div><!-- menu-section -->
+        
+        <div class="menu-section">
+          <h2>Cocktails <span class="price">$11</span></h2>
+          <h3>Petty</h3>
+          <p>vodka, grapefruit, muddled raspberries, yuzu</p>
+          <h3>Days of Being Wild</h3>
+          <p>tequila, triple sec, lime, blood orange</p>
+          <h3>Gucci Belt</h3>
+          <p>gin, campari, sweet vermouth, pomegranate, cardamom bitters, rosemary</p>
+          <h3>Tony Leung</h3>
+          <p>bourbon, frangelico, egg white, pistachio, sugar, angostura</p>
+          <h3>Mercury in Retrograde</h3>
+          <p>gin, vodka, tequila, blue curaçao, sour, green tea infused ginger ale, grenadine</p>
+          <h3>Outkast</h3>
+          <p>rosé, rose syrup, rose petal, seltzer, lavender</p>
+        </div><!-- menu-section -->
+        <div class="menu-image"><img src="assets/images/back-image.svg" class="front-image" alt="Happy Together" /></div>
+      </div>
+      <div class="back">
+        <h1 class="logo"><img src="assets/images/mr.svg" alt="mood ring" /></h1>
+        <div class="menu-section">
+          <h2>Shots <span class="price">$3</span></h2>
+          <h3>The Aux Cord</h3>
+          <p>vodka, tomato juice, sriracha, tabasco</p>
+          <h3>Bodega Dreams</h3>
+          <p>arizona ice tea infused whiskey</p>
+          <h3>Mystery of Luv</h3>
+          <p>lychee liquer, vodka, lime</p>
+        </div><!-- menu-section -->
+        <div class="menu-section">
+          <h2>On Draft <span class="price">$6</span></h2>
+          <p>Blue Moon<br>Brooklyn East IPA<br>Stronbow Cider</p>
+        </div><!-- menu-section -->
+        <div class="menu-section">
+          <h2>Cans &amp; Bottles <span class="price">$5</span></h2>
+          <p>Corona<br>Tsingtao<br>Tiger<br>Scofferhofer</p>
+        </div><!-- menu-section -->
+        <div class="menu-section">
+          <h2>Wine <span class="price">$8</span></h2>
+          <p>House Red<br>House White<br>Rosé</p>
+        </div><!-- menu-section -->
+        <div class="menu-image"><img src="assets/images/front-image.svg" class="back-image" alt="Happy Together" /></div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="information information-left">
+    <div class="inner">
+    <div>
+      <h2>Hours</h2>
+      <p>Opening September</p>
+    </div>
+    <div>
+      <h2>Address</h2>
+      <p><a href="https://www.google.com/maps/place/1260+Myrtle+Ave,+Brooklyn,+NY+11221/@40.697726,-73.929102,17z/data=!3m1!4b1!4m5!3m4!1s0x89c25c057e2393a7:0x15f31f8561105055!8m2!3d40.697726!4d-73.926908" title="address" target="_blank">1260 Myrtle Ave<br>Brooklyn, NY 11221</a></p>
+    </div>
+    <div>
+      <h2>Instagram</h2>
+      <p><a href="http://instagram.com/moodringnyc" title="instagram" target="_blank">@moodringnyc</a></p>
+    </div>
+  </div>
+  </section>
+  
+  <section class="information information-right">
+    <div class="inner">
+    <div>
+      <h2>Hours</h2>
+      <p>Opening September</p>
+    </div>
+    <div>
+      <h2>Address</h2>
+      <p><a href="https://www.google.com/maps/place/1260+Myrtle+Ave,+Brooklyn,+NY+11221/@40.697726,-73.929102,17z/data=!3m1!4b1!4m5!3m4!1s0x89c25c057e2393a7:0x15f31f8561105055!8m2!3d40.697726!4d-73.926908" title="address" target="_blank">1260 Myrtle Ave<br>Brooklyn, NY 11221</a></p>
+    </div>
+    <div>
+      <h2>Instagram</h2>
+      <p><a href="http://instagram.com/moodringnyc" title="instagram" target="_blank">@moodringnyc</a></p>
+    </div>
+  </div>
+  </section>
+  
+  <div class="video-overlay"></div>
+  <div class="video-background">
+    <div class="video-foreground">
+      
+    </div>
+    <div class="background-blend"></div>
+  </div>
+  
+  
+  <div class="video-overlay"></div>
+  <div class="video-background">
+    <div class="video-foreground">
+      <div id="video-one"></div>
+    </div>
+    <div class="background-blend"></div>
+  </div>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  
+  
+  <script type="text/javascript" src="assets/js/vendors.js"></script>
+  
+  <script type="text/javascript">
+    $(document).bind("mobileinit", function () {
+      $.mobile.loader.prototype.options.disabled = true;
+      $.mobile.ajaxEnabled = false;
+      // As submitted by @Aras
+      $.mobile.loading( "hide" );
+      // (or presumably as submitted by @Pnct)
+      $.mobile.loading().hide();
+
+    });
+          
+    var isFront = true,
+        isMobile = false;
+    
+    
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      isMobile = true;
+    }
+    
+    
+    $(document).ready(function(){
+      
+      $(window).on('resize', winResize);
+      
+      $(window).trigger('mousemove');
+      winResize();
+      
+      if(isMobile) {
+        $('body').touch();
+        $('.container').touch();
+        
+        $('.container').on('tap', function(event) {
+          winClick()
+        })
+        
+      } else {
+        $(window).on('mousemove', function(e){
+          setCard(e);
+        });
+      }
+      
+      function winClick(){
+        setNewColor();
+        toggleFlip();
+        console.log('tap')
+      }
+      
+      function toggleFlip(){
+        $('.card').toggleClass('flipped');
+      }
+      
+      function setCard(e) {
+        var offset = e.clientX - $(window).width()/2;
+        var midpoint = $(window).width();
+        var deg = ((e.clientX + e.clientX*2)/midpoint) * 180;
+        
+        //console.log(deg)
+        
+        var back = deg - 180;
+        var front = deg;
+        var xPos = $(window).width() - e.clientX - $('.container').width()/2;
+        var xPosInfo = e.clientX - $('.information').width()/2;
+        
+        back = back > 180 ? 180 : back;
+        back = back < 0 ? 0 : back;
+        
+        front = front < 180 ? 180 : front;
+        front = front > 360 ? 360 : front;
+        
+        xPos = xPos < 0 ? 0 : xPos;
+        xPos = xPos > $(window).width() - $('.container').width() - 80 ? $(window).width() - $('.container').width() - 80: xPos;
+        
+        xPosInfo = xPosInfo < 0 ? 0 : xPosInfo;
+        
+        if(front == 360 && !isFront) {
+          isFront = true;
+          setNewColor();
+        } else if(front == 180 && isFront) {
+          isFront = false;
+          setNewColor();
+        }
+        
+        $('.container').css('-webkit-transform', 'translateX('+ xPos +'px)');
+        $('.card .front').css('-webkit-transform', 'rotateY('+ front +'deg)');
+        $('.card .back').css('-webkit-transform', 'rotateY('+ back +'deg)');
+      }
+      
+      function setNewColor(){
+        var color = randomColor(); // a hex code for an attractive color
+        $('.front, .back, .background-blend, body').css('background-color', color);
+      
+      }
+      
+      setNewColor();
+      
+      
+      function winResize(){
+        
+        
+        console.log(isMobile)
+        if(!isMobile) {
+          var containerHeight = $(window).height() - 60;
+          var containerWidth = containerHeight * .5377;
+          var informationWidth = containerWidth;
+        
+          var fontSize = containerWidth * 100;
+        
+          $('.container').css('height', containerHeight).css('width', containerWidth);
+          $('.information').css('height', containerHeight).css('width', informationWidth);
+        } else {
+          var containerHeight = $(window).height() - 60;
+          var containerWidth = containerHeight * .5377;
+          var informationWidth = containerWidth;
+        
+          $('.container').css('height', containerHeight).css('width', containerWidth).css('left', $(window).width()/2 - $('.container').width()/2)
+          $('.information').css('height', containerHeight).css('width', informationWidth).css('left', $(window).width()/2 - $('.information').width()/2)
+        }
+        
+        
+        //$('p').css('font-size', fontSize + 'vw');
+        
+      }
+      
+    });
+    
+    
+  </script>
+    
+    
+    <script>
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      
+      //4he-oX6B-Kw
+      //nVU3MNDkDUI tony
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('video-one', {
+          height: '390',
+          width: '640',
+          videoId: '4he-oX6B-Kw',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+      
+      
+
+      // 4. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        event.target.playVideo();
+        event.target.mute();
+        event.target.setVolume(0);
+        event.target.setLoop(0);
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+      var done = false;
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+          setTimeout(loopVideo, 17000);
+        }
+        /*
+        if (event.data == YT.PlayerState.ENDED) {
+          
+                  
+          console.log('ended')
+          event.target.seekTo(0);
+          event.target.playVideo();
+        }
+        */
+      }
+      
+      function loopVideo(){
+        player.seekTo(0);
+        player.playVideo();
+      }
+      
+      function stopVideo() {
+        player.stopVideo();
+      }
+    </script>
+  
+
+
+</body>
